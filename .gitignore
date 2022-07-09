@@ -1,0 +1,8 @@
+# output files
+out
+
+# python generated files
+__*
+
+# system files
+.DS_Store
