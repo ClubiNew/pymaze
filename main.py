@@ -1,7 +1,7 @@
 import os
 import random
 from PIL import Image
-from algorithms import prims
+from algorithms import prims, dfs
 from util import prompt
 
 # get basic configuration options from the user
@@ -17,11 +17,13 @@ if prompt.get_decision("Specify seed"):
 print("\n=== algorithms ===")
 img = Image.new('1', (SIZE_X, SIZE_Y))
 
-algorithm_options = ["Prim's algorithm"]
+algorithm_options = ["Prim's algorithm", "Randomized depth-first search"]
 selected_algorithm = prompt.get_selection(algorithm_options, "Select algorithm")
 
 if (selected_algorithm == 0):
     prims.generate(img, SIZE_X, SIZE_Y)
+elif (selected_algorithm == 1):
+    dfs.generate(img, SIZE_X, SIZE_Y)
 
 # output resulting maze
 print("\n=== output ===")

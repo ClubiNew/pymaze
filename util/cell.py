@@ -6,7 +6,7 @@ class CellType(Enum):
     PATH = 1
 
 class Cell:
-    def __init__(self, pos: Pos, type: CellType):
+    def __init__(self, pos: Pos, type: CellType = None):
         self.pos = pos
         self.type = type
         self.visited = False
