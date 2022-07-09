@@ -1,13 +1,11 @@
-from cmath import e
 import random
 from PIL import Image
-from algorithms.prims import get_neighbors
 from util.cell import *
-from util.grid import *
+from util.position import *
 
 def generate(img: Image, size_x: int, size_y: int):
     # create cells grid
-    cells: list[Cell] = []
+    cells: list[list[Cell]] = []
 
     for x in range(size_x):
         cells.append([])
@@ -18,8 +16,7 @@ def generate(img: Image, size_x: int, size_y: int):
                 img.putpixel((x, y), 1)
 
     # pick random starting cell
-    start_pos = random_path_pos(size_x, size_y)
-    start_cell: Cell = cells[start_pos.x][start_pos.y]
+    start_cell: Cell = random_path(cells)
     start_cell.visited = True
 
     # iterative implementation
@@ -27,9 +24,9 @@ def generate(img: Image, size_x: int, size_y: int):
 
     while len(stack) != 0:
         cell = stack.pop()
-        unvisited_neighbors = get_neighbors(cells, cell)[1]
+        unvisited_neighbors = cell.get_unvisited_neighbors(cells)
         if len(unvisited_neighbors) != 0:
-            neighbor = random.choice(unvisited_neighbors)
+            neighbor: Cell = random.choice(unvisited_neighbors)
             neighbor.visited = True
 
             wall_pos = get_middle(cell.pos, neighbor.pos)

@@ -1,13 +1,13 @@
 import os
 import random
 from PIL import Image
-from algorithms import prims, dfs
+from algorithms import prims, dfs, wilsons
 from util import prompt
 
 # get basic configuration options from the user
 print("=== pymaze ===")
-SIZE_X = prompt.get_int("Maze width (cells)", 3, odd=True)
-SIZE_Y = prompt.get_int("Maze height (cells)", 3, odd=True)
+SIZE_X = prompt.get_int("Maze width (cells)", 5, odd=True)
+SIZE_Y = prompt.get_int("Maze height (cells)", 5, odd=True)
 SCALE = prompt.get_int("Maze size (px/cell)", 1)
 
 if prompt.get_decision("Specify seed"):
@@ -17,13 +17,15 @@ if prompt.get_decision("Specify seed"):
 print("\n=== algorithms ===")
 img = Image.new('1', (SIZE_X, SIZE_Y))
 
-algorithm_options = ["Prim's algorithm", "Randomized depth-first search"]
+algorithm_options = ["Prim's algorithm", "Randomized depth-first search", "Wilson's algorithm"]
 selected_algorithm = prompt.get_selection(algorithm_options, "Select algorithm")
 
 if (selected_algorithm == 0):
     prims.generate(img, SIZE_X, SIZE_Y)
 elif (selected_algorithm == 1):
     dfs.generate(img, SIZE_X, SIZE_Y)
+elif (selected_algorithm == 2):
+    wilsons.generate(img, SIZE_X, SIZE_Y)
 
 # output resulting maze
 print("\n=== output ===")
