@@ -19,8 +19,6 @@ def generate(img: Image, size_x: int, size_y: int):
     start_cell: Cell = random_path(cells)
     start_cell.visited = True
 
-    print("Starting at", start_cell.pos.x, start_cell.pos.y)
-
     # simplified prim's
     neighbors: list[Cell] = start_cell.get_neighbors(cells)
 
@@ -38,4 +36,3 @@ def generate(img: Image, size_x: int, size_y: int):
 
             wall_pos = get_middle(cell.pos, selected_neighbor.pos)
             img.putpixel((wall_pos.x, wall_pos.y), 1)
-            #print("Removing wall at", wall_pos.x, wall_pos.y, "between", cell.pos.x, cell.pos.y, "and", selected_neighbor.pos.x, selected_neighbor.pos.y)
