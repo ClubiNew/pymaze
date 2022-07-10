@@ -8,6 +8,12 @@ class Pos():
     def __str__(self) -> str:
         return f"({self.x}, {self.y})"
 
+    def __sub__(self, other: Self) -> Self:
+        return Pos(self.x - other.x, self.y - other.y)
+
+    def __add__(self, other: Self) -> Self:
+        return Pos(self.x + other.x, self.y + other.y)
+
     def get_adjacent(self, size_x: int, size_y: int) -> list[Self]:
         adjacent = []
 

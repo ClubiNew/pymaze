@@ -4,7 +4,7 @@ pymaze is a python program for maze generation. Simply run `main.py` and select 
 
 # Supported Algorithms
 
-pymaze currently has three algorithms to choose from. Each algorithm produces stylistically unique results.
+pymaze currently has four algorithms to choose from. Each algorithm produces stylistically unique results.
 
 ## 1. Prim's algorithm
 
@@ -12,7 +12,7 @@ Using a simplified and randomized version of [Prim's algorithm](https://en.wikip
 
 <details>
     <summary><b>Example Results</b></summary>
-    <img src="examples/prims/99x33.png" alt="63x43 Prim's maze" />
+    <img src="examples/prims/99x33.png" alt="99x33 Prim's maze" />
     <img src="examples/prims/49x49.png" alt="49x49 Prim's maze" />
 </details>
 
@@ -32,8 +32,18 @@ Using [loop-erased walks](https://en.wikipedia.org/wiki/Loop-erased_random_walk)
 
 <details>
     <summary><b>Example Results</b></summary>
-    <img src="examples/wilsons/99x33.png" alt="63x43 Wilson's maze" />
+    <img src="examples/wilsons/99x33.png" alt="99x33 Wilson's maze" />
     <img src="examples/wilsons/49x49.png" alt="49x49 Wilson's maze" />
+</details>
+
+## 4. Recursive division
+
+By recursively splitting the maze into smaller pieces using randomly placed walls with a randomly placed gap on them, you can generate mazes with very long walls.
+
+<details>
+    <summary><b>Example Results</b></summary>
+    <img src="examples/division/99x33.png" alt="99x33 recursively divided maze" />
+    <img src="examples/division/49x49.png" alt="49x49 recursively divided maze" />
 </details>
 
 **_Note:_** All of the example mazes are generated with their extension-less file name (i.e. 99x33) as the seed, should you wish to re-create them.
