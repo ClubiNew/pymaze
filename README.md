@@ -1,6 +1,11 @@
 # pymaze
 
-pymaze is a python program for maze generation. Simply run `main.py` and select the maze size, resolution, seed and algorithm to use. Saved mazes will output to the `pymaze/out` directory.
+pymaze is a maze generation program written in Python 3. To use pymaze, follow these steps:
+
+1. Run `python3 -m pip install -r requirements.txt` to install the dependencies
+2. Run `python3 main.py` and select the maze size, resolution, seed and algorithm to use
+3. Preview and/or save the generated maze
+    - Saved mazes will output to the `pymaze/out` directory
 
 # Supported Algorithms
 
