@@ -1,9 +1,9 @@
 import random
-from PIL import Image
+from util.canvas import Canvas
 from util.cell import *
 from util.position import *
 
-def generate(img: Image, size_x: int, size_y: int):
+def generate(canvas: Canvas, size_x: int, size_y: int):
     # create cells grid
     cells: list[Cell] = []
 
@@ -13,7 +13,6 @@ def generate(img: Image, size_x: int, size_y: int):
             # paths are at odd co-ordinates
             if x % 2 == 1 and y % 2 == 1:
                 cells[x].append(Cell(Pos(x, y), CellType.PATH))
-                img.putpixel((x, y), 1)
             else:
                 cells[x].append(Cell(Pos(x, y), CellType.WALL))
 
@@ -51,8 +50,8 @@ def generate(img: Image, size_x: int, size_y: int):
 
             if previous_cell != None:
                 wall_pos = get_middle(cell.pos, previous_cell.pos)
-                img.putpixel((wall_pos.x, wall_pos.y), 1)
+                canvas.path(wall_pos.x, wall_pos.y)
             previous_cell = cell
 
         wall_pos = get_middle(current_cell.pos, previous_cell.pos)
-        img.putpixel((wall_pos.x, wall_pos.y), 1)
+        canvas.path(wall_pos.x, wall_pos.y)

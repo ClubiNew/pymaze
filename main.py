@@ -1,44 +1,43 @@
-import os
-import random
-from PIL import Image
 from algorithms import prims, dfs, wilsons, division
-from util import prompt
+from util import prompt, canvas
+import random
 
 # get basic configuration options from the user
 print("=== pymaze ===")
-SIZE_X = prompt.get_int("Maze width (cells)", 5, odd=True)
-SIZE_Y = prompt.get_int("Maze height (cells)", 5, odd=True)
-SCALE = prompt.get_int("Maze size (px/cell)", 1)
+size_x = prompt.get_int("Maze width (cells)", 5, odd=True)
+size_y = prompt.get_int("Maze height (cells)", 5, odd=True)
+scale = prompt.get_int("Maze size (px/cell)", 1)
+animated = prompt.get_decision("Animated")
+
+canvas = canvas.Canvas(size_x, size_y, scale, animated)
 
 if prompt.get_decision("Specify seed"):
     random.seed(input("Seed: "))
 
 # algorithm select & run
 print("\n=== algorithms ===")
-img = Image.new('1', (SIZE_X, SIZE_Y))
-
 algorithm_options = ["Prim's algorithm", "Randomized depth-first search", "Wilson's algorithm", "Recursive division"]
 selected_algorithm = prompt.get_selection(algorithm_options, "Select algorithm")
 
 if (selected_algorithm == 0):
-    prims.generate(img, SIZE_X, SIZE_Y)
+    prims.generate(canvas, size_x, size_y)
 elif (selected_algorithm == 1):
-    dfs.generate(img, SIZE_X, SIZE_Y)
+    dfs.generate(canvas, size_x, size_y)
 elif (selected_algorithm == 2):
-    wilsons.generate(img, SIZE_X, SIZE_Y)
+    wilsons.generate(canvas, size_x, size_y)
 elif (selected_algorithm == 3):
-    division.generate(img, SIZE_X, SIZE_Y)
+    division.generate(canvas, size_x, size_y)
 
 # output resulting maze
 print("\n=== output ===")
-final_image = img.resize((SIZE_X * SCALE, SIZE_Y * SCALE))
-
 if prompt.get_decision("Show preview"):
-    final_image.show()
+    canvas.preview()
 
 if prompt.get_decision("Save"):
-    if not os.path.isdir("out"):
-        os.makedirs("out")
-
     file_name = input("File name: ")
-    final_image.save(f"out/{file_name}.png")
+    if not animated:
+        canvas.save(file_name)
+    else:
+        duration = prompt.get_int("Duration (s)", 2)
+        fps = prompt.get_int("FPS (#)", 1)
+        canvas.save_animated(file_name, fps, duration)
