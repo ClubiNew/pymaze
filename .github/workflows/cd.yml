@@ -52,9 +52,9 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
       - name: Build for x86_64 architecture
-        run: pyinstaller --onefile pymaze.py --target-arch x86_64 --name pymaze-macos-x86_64
+        run: pyinstaller --onefile --target-arch x86_64 --name pymaze-macos-x86_64 pymaze.py
       - name: Build for arm64 architecture
-        run: pyinstaller --onefile pymaze.py --target-arch arm64 --name pymaze-macos-arm64
+        run: pyinstaller --onefile --target-arch arm64 --name pymaze-macos-arm64 --clean pymaze.py
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
