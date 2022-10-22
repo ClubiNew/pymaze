@@ -1,5 +1,6 @@
 name: CD
 
+# Create new release without changes:
 # git commit -m "[commit_message]" --allow-empty
 # git tag [tag_name]
 # git push origin [branch_name] --tags
@@ -8,10 +9,16 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version"
+        required: true
+        type: string
 
 jobs:
-  build-unix:
-    name: Build for Unix
+  build-linux:
+    name: Build for Linux
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,12 +31,35 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
       - name: Build
-        run: pyinstaller --onefile --name "pymaze" main.py
+        run: pyinstaller --onefile pymaze.py
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: pymaze
+          name: pymaze-linux
           path: dist/pymaze
+
+  build-macos:
+    name: Build for macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python interpreter
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Build for x86_64 architecture
+        run: pyinstaller --onefile pymaze.py --target-arch x86_64 --name pymaze-macos-x86_64
+      - name: Build for arm64 architecture
+        run: pyinstaller --onefile pymaze.py --target-arch arm64 --name pymaze-macos-arm64
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pymaze-macos
+          path: dist/
 
   build-windows:
     name: Build for Windows
@@ -45,39 +75,41 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
       - name: Build
-        run: pyinstaller --onefile --name "pymaze" main.py
+        run: pyinstaller --onefile pymaze.py
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: pymaze.exe
+          name: pymaze-windows.exe
           path: dist/pymaze.exe
 
   draft-release:
     name: Draft Release
     runs-on: ubuntu-latest
     needs:
-      - build-unix
+      - build-linux
+      - build-macos
       - build-windows
     steps:
-      - name: Download Unix build
+      - name: Download artifacts
         uses: actions/download-artifact@v3
-        with:
-          name: pymaze
-      - name: Download Windows build
-        uses: actions/download-artifact@v3
-        with:
-          name: pymaze.exe
-      - name: Get version
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Get version from commit tag
+        if: github.event_name == 'push'
         run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
+      - name: Get version from dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "version=${{ github.event.inputs.version }}" >> "$GITHUB_ENV"
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
           name: pymaze ${{ env.version }}
-          body: Use `pymaze.exe` on Windows and `pymaze` on Linux/macOS.
           tag_name: ${{ env.version }}
           token: ${{ SECRETS.GITHUB_TOKEN }}
           fail_on_unmatched_files: true
           draft: true
           files: |
-            pymaze
-            pymaze.exe
+            pymaze-windows.exe
+            pymaze-linux
+            pymaze-macos/pymaze-macos-x86_64
+            pymaze-macos/pymaze-macos-arm64
