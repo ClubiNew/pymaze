@@ -55,6 +55,9 @@ jobs:
   draft-release:
     name: Draft Release
     runs-on: ubuntu-latest
+    needs:
+      - build-unix
+      - build-windows
     steps:
       - name: Download Unix build
         uses: actions/download-artifact@v3
