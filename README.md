@@ -1,6 +1,6 @@
 # pymaze
 
-pymaze is a maze generation program written in Python 3. To use pymaze, follow these steps:
+pymaze is a maze generation program written in Python 3. To use pymaze, download a precompiled [release](https://github.com/ClubiNew/pymaze/releases), or clone the repository and follow these steps:
 
 1. Run `python3 -m pip install -r requirements.txt` to install the dependencies
 2. Run `python3 main.py` and select the maze size, resolution, seed and algorithm to use

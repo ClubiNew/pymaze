@@ -1,5 +1,9 @@
 name: CD
 
+# git commit -m "[commit_message]" --allow-empty
+# git tag [tag_name]
+# git push origin [branch_name] --tags
+
 on:
   push:
     tags:
