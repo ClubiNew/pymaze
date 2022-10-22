@@ -70,10 +70,18 @@ jobs:
       - version
       - build
     steps:
-      - name: Download artifacts
+      - name: Download Linux build
         uses: actions/download-artifact@v3
-      - name: Display structure of downloaded files
-        run: ls -R
+        with:
+          name: pymaze-${{ needs.version.outputs.version }}-ubuntu
+      - name: Download Windows build
+        uses: actions/download-artifact@v3
+        with:
+          name: pymaze-${{ needs.version.outputs.version }}-windows.exe
+      - name: Download macOS build
+        uses: actions/download-artifact@v3
+        with:
+          name: pymaze-${{ needs.version.outputs.version }}-macos
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
