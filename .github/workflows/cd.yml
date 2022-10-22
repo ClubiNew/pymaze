@@ -73,6 +73,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: pymaze ${{ env.version }}
+          body: Use `pymaze.exe` on Windows and `pymaze` on Linux/macOS.
           tag_name: ${{ env.version }}
           token: ${{ SECRETS.GITHUB_TOKEN }}
           fail_on_unmatched_files: true
