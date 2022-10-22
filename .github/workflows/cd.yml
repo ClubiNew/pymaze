@@ -56,12 +56,12 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
       - name: Build
-        run: pyinstaller --onefile pymaze.py
+        run: pyinstaller -F -n pymaze-${{ needs.version.outputs.version }}-${{ matrix.os }} pymaze.py
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: pymaze-${{ needs.version.outputs.version }}-${{ matrix.os }}${{ matrix.extension }}
-          path: dist/pymaze${{ matrix.extension }}
+          path: dist/pymaze-${{ needs.version.outputs.version }}-${{ matrix.os }}${{ matrix.extension }}
 
   draft-release:
     name: Draft release
@@ -92,5 +92,5 @@ jobs:
           draft: true
           files: |
             pymaze-${{ needs.version.outputs.version }}-windows.exe
-            pymaze-${{ needs.version.outputs.version }}-linux
+            pymaze-${{ needs.version.outputs.version }}-ubuntu
             pymaze-${{ needs.version.outputs.version }}-macos
