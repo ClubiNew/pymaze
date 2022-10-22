@@ -1,0 +1,75 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-unix:
+    name: Build for Unix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python interpreter
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Build
+        run: pyinstaller --onefile --name "pymaze" main.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pymaze
+          path: dist/pymaze
+
+  build-windows:
+    name: Build for Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python interpreter
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Build
+        run: pyinstaller --onefile --name "pymaze" main.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pymaze.exe
+          path: dist/pymaze.exe
+
+  draft-release:
+    name: Draft Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Unix build
+        uses: actions/download-artifact@v3
+        with:
+          name: pymaze
+      - name: Download Windows build
+        uses: actions/download-artifact@v3
+        with:
+          name: pymaze.exe
+      - name: Get version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: pymaze ${{ env.version }}
+          tag_name: ${{ env.version }}
+          token: ${{ SECRETS.GITHUB_TOKEN }}
+          fail_on_unmatched_files: true
+          draft: true
+          files: |
+            pymaze
+            pymaze.exe

@@ -1,8 +1,11 @@
 # output files
 out
 
-# python generated files
+# python build files
 __*
+build
+dist
+*.spec
 
 # system files
 .DS_Store
