@@ -8,7 +8,7 @@ name: CD
 on:
   push:
     tags:
-      - "v*"
+      - "v*.*.*"
   workflow_dispatch:
     inputs:
       version:
@@ -38,7 +38,6 @@ jobs:
     needs: version
     runs-on: ${{ matrix.os }}-latest
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu, windows, macos]
         include:
@@ -60,8 +59,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: pymaze-${{ needs.version.outputs.version }}-${{ matrix.os }}${{ matrix.extension }}
-          path: dist/pymaze-${{ needs.version.outputs.version }}-${{ matrix.os }}${{ matrix.extension }}
+          name: ${{ matrix.os }}
+          path: dist/pymaze-*
 
   draft-release:
     name: Draft release
@@ -70,18 +69,8 @@ jobs:
       - version
       - build
     steps:
-      - name: Download Linux build
+      - name: Download artifacts
         uses: actions/download-artifact@v3
-        with:
-          name: pymaze-${{ needs.version.outputs.version }}-ubuntu
-      - name: Download Windows build
-        uses: actions/download-artifact@v3
-        with:
-          name: pymaze-${{ needs.version.outputs.version }}-windows.exe
-      - name: Download macOS build
-        uses: actions/download-artifact@v3
-        with:
-          name: pymaze-${{ needs.version.outputs.version }}-macos
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
@@ -89,8 +78,5 @@ jobs:
           tag_name: ${{ needs.version.outputs.version }}
           token: ${{ SECRETS.GITHUB_TOKEN }}
           fail_on_unmatched_files: true
+          files: ./*/pymaze-*
           draft: true
-          files: |
-            pymaze-${{ needs.version.outputs.version }}-windows.exe
-            pymaze-${{ needs.version.outputs.version }}-ubuntu
-            pymaze-${{ needs.version.outputs.version }}-macos
